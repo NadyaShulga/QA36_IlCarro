@@ -3,6 +3,7 @@ package manager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class HelperUser extends HelperBase{
     }
 
     public void fillLoginRegistrationForm(String email, String password){
-        type(By.xpath(" //input[@id='email']"), email);
+        type(By.cssSelector("#email"), email);
         type(By.xpath("//input[@id='password']"), password);
     }
     public void submitLogin(){
@@ -33,4 +34,21 @@ public class HelperUser extends HelperBase{
     public void logout() {
         click(By.xpath("//a[normalize-space()='Logout']"));
     }
+
+  public String isErrorMessageLogin(){
+      WebElement wrongEmail =  wd.findElement(By.cssSelector("div[class='ng-star-inserted']"));
+      String text = wrongEmail.getText();
+      return text;
+   }
+
+   public String isErrorMessagePassword(){
+        WebElement wrongPassword = wd.findElement((By.cssSelector("h1[class='title']")));
+        String text = wrongPassword.getText();
+        return text;
+   }
+
+    public void submitWrongForm(){
+        click(By.xpath("//button[normalize-space()='Ok']"));
+    }
+
 }
