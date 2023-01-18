@@ -17,18 +17,18 @@ public class RegistrationTests extends TestBase{
         }
     }
     @Test
-    public void registrationSuccess()  {
+    public void registrationSuccess() throws InterruptedException {
         Random random = new Random();
         int i = random.nextInt(1000);
-        User user = new User().withName("Paula").withLastName("Moro").withEmail("moro"+"i"+"@gmail.com").withPassword("Moro12345$");
+        User user = new User().withName("Paula").withLastName("Moro").withEmail("moro"+i+"@gmail.com").withPassword("Moro12345$");
 
         app.getHelperUser().openRegistrationForm();
         app.getHelperUser().fillRegistrationForm(user);
-        app.getHelperUser().checkPolicy();
-        // app.getHelperUser().submit();
-        // Assert.assertEquals(app.getHelperUser().getRegMessage(),"Registered");
-
-
+        app.getHelperUser().checkPolicyXY();
+        //app.getHelperUser().checkPolicyJS();
+        app.getHelperUser().submit();
+        Thread.sleep(2000);
+        Assert.assertEquals(app.getHelperUser().getMessage(),"You are logged in success");
     }
     @Test
     public void registrationWrongEmail(){
@@ -37,12 +37,11 @@ public class RegistrationTests extends TestBase{
 
         app.getHelperUser().openRegistrationForm();
         app.getHelperUser().fillRegistrationForm(user);
-        app.getHelperUser().checkPolicy();
+        app.getHelperUser().checkPolicyXY();
         app.getHelperUser().submit();
         Assert.assertTrue(app.getHelperUser().isYallaButtonNotActive());
         Assert.assertEquals(app.getHelperUser().getErrorText(),"Wrong email format\n" +
                 "Wrong email format");
-
     }
        @Test
     public void registrationWrongPassword(){
@@ -51,7 +50,7 @@ public class RegistrationTests extends TestBase{
 
         app.getHelperUser().openRegistrationForm();
         app.getHelperUser().fillRegistrationForm(user);
-        app.getHelperUser().checkPolicy();
+        app.getHelperUser().checkPolicyXY();
         app.getHelperUser().submit();
         Assert.assertTrue(app.getHelperUser().isYallaButtonNotActive());
         Assert.assertEquals(app.getHelperUser().getErrorText(),"Password must contain minimum 8 symbols\n" +
@@ -60,36 +59,35 @@ public class RegistrationTests extends TestBase{
     @Test
     public void registrationWrongName() throws InterruptedException {
 
-        User user = new User().withName(null).withLastName("Moro").withEmail("moro@gmail.com").withPassword("Moro:12345$");
+        User user = new User().withName(null).withLastName("Moro").withEmail("moro1@gmail.com").withPassword("Moro#12345$");
 
         app.getHelperUser().openRegistrationForm();
         app.getHelperUser().fillRegistrationForm(user);
-        app.getHelperUser().checkPolicy();
+        app.getHelperUser().checkPolicyXY();
         app.getHelperUser().submit();
         Thread.sleep(2000);
         Assert.assertTrue(app.getHelperUser().isYallaButtonNotActive());
        // Assert.assertEquals(app.getHelperUser().getErrorText(),"Name is required");
-        app.getHelperUser().refresh();
-
+       // app.getHelperUser().refresh();
     }
     @Test
     public void registrationWrongLastName() throws InterruptedException {
 
-        User user = new User().withName("Paula").withLastName(null).withEmail("moro@gmail.com").withPassword("Moro12345$");
+        User user = new User().withName("Paula").withLastName("").withEmail("moro@gmail.com").withPassword("Moro12345$");
 
         app.getHelperUser().openRegistrationForm();
         app.getHelperUser().fillRegistrationForm(user);
-        app.getHelperUser().checkPolicy();
+        app.getHelperUser().checkPolicyXY();
+        Thread.sleep(2000);
         app.getHelperUser().submit();
         Thread.sleep(2000);
         Assert.assertTrue(app.getHelperUser().isYallaButtonNotActive());
-       // Assert.assertEquals(app.getHelperUser().getErrorText(),"Last name is required");
-        app.getHelperUser().refresh();
+        // Assert.assertEquals(app.getHelperUser().getErrorText(),"Last name is required");
+       // app.getHelperUser().refresh();
     }
     @AfterMethod
     public void postCondition(){
         app.getHelperUser().closeDialogContainer();
        // app.getHelperUser().refresh();
     }
-
 }

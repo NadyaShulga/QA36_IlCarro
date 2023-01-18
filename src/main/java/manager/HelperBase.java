@@ -27,4 +27,12 @@ public class HelperBase {
 
         return wd.findElements(locator).size()>0;
     }
+
+    public void submit() {
+
+        click(By.xpath("//button[@type='submit']"));
+    }
+   public void pause(int time) throws InterruptedException {
+    Thread.sleep(time);
+}
 }

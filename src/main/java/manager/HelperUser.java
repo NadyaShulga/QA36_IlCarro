@@ -1,9 +1,8 @@
 package manager;
 
 import model.User;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 
 import java.util.List;
@@ -28,10 +27,6 @@ public class HelperUser extends HelperBase {
         type(By.id("password"),user.getPassword());
     }
 
-    public void submit() {
-        click(By.xpath("//button[text()='Y’alla!']"));
-    }
-
     public String getMessage() {
         return wd.findElement(By.cssSelector("div.dialog-container>h2")).getText();
     }
@@ -40,7 +35,6 @@ public class HelperUser extends HelperBase {
         if(isElementPresent(By.xpath("//button[text()='Ok']"))) {
             click(By.xpath("//button[text()='Ok']"));
         }
-
         }
     public boolean isLogged() {
             return isElementPresent(By.cssSelector("div.header a:nth-child(5)"));
@@ -71,20 +65,41 @@ public class HelperUser extends HelperBase {
     }
 
     public void checkPolicy() {
-    //wd.findElement(By.xpath("//*[contains(@class,'checkbox-label terms-label')]")).click();
-    click(By.xpath("//div[@class='checkbox-container']"));
-
-
-
-    }
-    public String getRegMessage() {
-        return wd.findElement(By.cssSelector("h1[class='title']")).getText();
-    }
-    public void refresh(){
-        wd.navigate().refresh();
+    if(!wd.findElement(By.id("terms-of-use")).isSelected()){
+    click(By.cssSelector("label[for='terms-of-use']"));
     }
 }
+    public void checkPolicyXY() {
+        Dimension size = wd.manage().window().getSize(); // object
+        System.out.println("Window Height" + size.getHeight());
+        System.out.println("Window Wight" + size.getWidth());
 
+        WebElement label = wd.findElement(By.cssSelector("label[for='terms-of-use']"));
+
+        Rectangle rect = label.getRect(); //object
+        int xOffset = rect.getWidth()/2;
+        Actions actions = new Actions(wd);
+        // actions.clickAndHold().moveToElement().pause().release().perform();
+        // actions.dragAndDropBy();
+        actions.moveToElement(label,-xOffset,0).click().release().perform();
+    }
+
+    public void checkPolicyJS() {
+            JavascriptExecutor js = (JavascriptExecutor) wd;
+            js.executeScript("document.querySelector('#terms-of-use').checked=true;");
+    }
+
+    public void refresh() {
+        wd.navigate().refresh();
+    }
+
+    public void login(User user) {
+        openLoginRegistrationForm();
+        fillLoginRegistrationForm(user);
+        submit();
+        closeDialogContainer();
+    }
+}
    /* public void submitInfForm(){
         click(By.xpath("//button[normalize-space()='Ok']"));
     }
