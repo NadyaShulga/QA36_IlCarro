@@ -59,7 +59,7 @@ public class RegistrationTests extends TestBase{
     @Test
     public void registrationWrongName() throws InterruptedException {
 
-        User user = new User().withName(null).withLastName("Moro").withEmail("moro1@gmail.com").withPassword("Moro#12345$");
+        User user = new User().withName("").withLastName("Moro").withEmail("moro1@gmail.com").withPassword("Moro#12345$");
 
         app.getHelperUser().openRegistrationForm();
         app.getHelperUser().fillRegistrationForm(user);
@@ -67,7 +67,7 @@ public class RegistrationTests extends TestBase{
         app.getHelperUser().submit();
         Thread.sleep(2000);
         Assert.assertTrue(app.getHelperUser().isYallaButtonNotActive());
-       // Assert.assertEquals(app.getHelperUser().getErrorText(),"Name is required");
+        Assert.assertEquals(app.getHelperUser().getErrorText(),"Name is required");
        // app.getHelperUser().refresh();
     }
     @Test
@@ -82,12 +82,10 @@ public class RegistrationTests extends TestBase{
         app.getHelperUser().submit();
         Thread.sleep(2000);
         Assert.assertTrue(app.getHelperUser().isYallaButtonNotActive());
-        // Assert.assertEquals(app.getHelperUser().getErrorText(),"Last name is required");
-       // app.getHelperUser().refresh();
+        Assert.assertEquals(app.getHelperUser().getErrorText(),"Last name is required");
     }
     @AfterMethod
-    public void postCondition(){
+    public void postCondition() {
         app.getHelperUser().closeDialogContainer();
-       // app.getHelperUser().refresh();
     }
 }
